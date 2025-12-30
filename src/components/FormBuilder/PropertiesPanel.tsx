@@ -19,7 +19,13 @@ import { useFormStore } from "../../store/formStore";
 import { FieldConfig } from "../../types";
 
 export default function PropertiesPanel() {
-  const { selectedField, tables, updateField, setSelectedField } = useFormStore();
+  const {
+    selectedField,
+    tables,
+    updateField,
+    setSelectedField,
+    updateDetailTableName,
+  } = useFormStore();
 
   if (!selectedField) {
     return (
@@ -57,11 +63,7 @@ export default function PropertiesPanel() {
     if (currentField.fieldType === "DetailTable") {
       const detailTable = tables.find((t) => t.name === old);
       if (detailTable) {
-        useFormStore.setState({
-          tables: tables.map((t) =>
-            t.name === old ? { ...t, name } : t
-          ),
-        });
+        updateDetailTableName(old, name);
       }
     }
   };
