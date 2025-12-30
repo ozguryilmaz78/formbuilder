@@ -171,21 +171,23 @@ export const useFormStore = create<FormBuilderState>((set, get) => ({
     });
   },
 
-  updateDetailTableName(oldName,newName){
-    const state = get();
-    get().updateTableName(oldName,newName);
-
-    // Field içindeki relationları da güncelle
-    set({
-      tables: state.tables.map(t => ({
+  updateDetailTableName(oldName, newName) {
+    set((state) => ({
+      tables: state.tables.map((t) => ({
         ...t,
-        fields: t.fields.map(f =>
-          f.relation && f.relation.childTable===oldName
-            ? {...f,relation:{...f.relation,childTable:newName}}
+        name: t.name === oldName ? newName : t.name,
+        fields: t.fields.map((f) =>
+          f.relation && f.relation.childTable === oldName
+            ? { ...f, relation: { ...f.relation, childTable: newName } }
             : f
-        )
-      }))
-    });
+        ),
+      })),
+      relations: state.relations.map((r) => ({
+        ...r,
+        parentTable: r.parentTable === oldName ? newName : r.parentTable,
+        childTable: r.childTable === oldName ? newName : r.childTable,
+      })),
+    }));
   },
 
   reset: () => set({ tables:[], relations:[], selectedField:null })
