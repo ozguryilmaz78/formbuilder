@@ -69,10 +69,16 @@ export default function PropertiesPanel() {
   };
 
   /* ---------------- SECİCİLERDE KURAL ----------------
-     parent dropdown => currentField kendi ismini asla göstermez
+     parent dropdown => detail table için sadece master görünsün
      child dropdown  => kendi tablo adı listelenmez
   -----------------------------------------------------*/
-  const parentOptions = tables.filter((t) => t.name !== currentTable.name);
+  const masterTable = tables.find((t) => t.isMaster);
+  const parentOptions =
+    currentField.fieldType === "DetailTable"
+      ? masterTable
+        ? [masterTable]
+        : [currentTable]
+      : tables.filter((t) => t.name !== currentTable.name);
   const childOptions = tables.filter((t) => t.name !== currentTable.name);
 
   return (
